@@ -17,21 +17,10 @@ public class BasicCrawler extends WebCrawler {
 
     private final AtomicInteger numSeenImages;
 
-    /**
-     * Creates a new crawler instance.
-     *
-     * @param numSeenImages This is just an example to demonstrate how you can pass objects to crawlers. In this
-     * example, we pass an AtomicInteger to all crawlers and they increment it whenever they see a url which points
-     * to an image.
-     */
     public BasicCrawler(AtomicInteger numSeenImages) {
         this.numSeenImages = numSeenImages;
     }
 
-    /**
-     * You should implement this function to specify whether the given url
-     * should be crawled or not (based on your crawling logic).
-     */
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();
@@ -42,13 +31,9 @@ public class BasicCrawler extends WebCrawler {
         }
 
         // Only accept the url if it is in the "www.ics.uci.edu" domain and protocol is "http".
-        return href.startsWith("https://www.ics.uci.edu/");
+        return href.startsWith("https://www.taobao.com/");
     }
 
-    /**
-     * This function is called when a page is fetched and ready to be processed
-     * by your program.
-     */
     @Override
     public void visit(Page page) {
         int docid = page.getWebURL().getDocid();
