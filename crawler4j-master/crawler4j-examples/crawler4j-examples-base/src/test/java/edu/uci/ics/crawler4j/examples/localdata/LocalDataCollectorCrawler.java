@@ -47,7 +47,7 @@ public class LocalDataCollectorCrawler extends WebCrawler {
             }
         }
         // We dump this crawler statistics after processing every 50 pages
-        if ((myCrawlStat.getTotalProcessedPages() % 50) == 0) {
+        if ((myCrawlStat.getTotalProcessedPages() % 5) == 0) {
             dumpMyData();
         }
     }
