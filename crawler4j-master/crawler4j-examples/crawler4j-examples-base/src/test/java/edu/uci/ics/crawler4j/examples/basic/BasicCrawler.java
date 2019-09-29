@@ -3,6 +3,9 @@ package edu.uci.ics.crawler4j.examples.basic;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
+import java.io.UnsupportedEncodingException;
+
+import javax.swing.AbstractButton;
 
 import org.apache.http.Header;
 
@@ -34,8 +37,15 @@ public class BasicCrawler extends WebCrawler {
         return href.startsWith("https://www.taobao.com/");
     }
 
+
+    CrawlStat myCrawlStat;
+
     @Override
     public void visit(Page page) {
+
+        logger.info("Visited: {}", page.getWebURL().getURL());
+        myCrawlStat.incProcessedPages();
+
         int docid = page.getWebURL().getDocid();
         String url = page.getWebURL().getURL();
         String domain = page.getWebURL().getDomain();
@@ -57,6 +67,13 @@ public class BasicCrawler extends WebCrawler {
             String text = htmlParseData.getText();
             String html = htmlParseData.getHtml();
             Set<WebURL> links = htmlParseData.getOutgoingUrls();
+            myCrawlStat.incTotalLinks(links.size());
+            try {
+                AbstractButton parseData = null;
+                myCrawlStat.incTotalTextSize(parseData.getText().getBytes("UTF-8").length);
+            } catch (UnsupportedEncodingException ignored) {
+                // Do nothing
+            }
 
             logger.debug("Text length: {}", text.length());
             logger.debug("Html length: {}", html.length());
@@ -72,5 +89,29 @@ public class BasicCrawler extends WebCrawler {
         }
 
         logger.debug("=============");
+
+        if ((myCrawlStat.getTotalProcessedPages() % 2) == 0) {
+            dumpMyData();
+        }
+    }
+
+
+    @Override
+    public Object getMyLocalData() {
+        return myCrawlStat;
+    }
+
+
+    @Override
+    public void onBeforeExit() {
+        dumpMyData();
+    }
+
+    public void dumpMyData() {
+        int id = getMyId();
+        // You can configure the log to output to file
+        logger.info("Crawler {} > Processed Pages: {}", id, myCrawlStat.getTotalProcessedPages());
+        logger.info("Crawler {} > Total Links Found: {}", id, myCrawlStat.getTotalLinks());
+        logger.info("Crawler {} > Total Text Size: {}", id, myCrawlStat.getTotalTextSize());
     }
 }
