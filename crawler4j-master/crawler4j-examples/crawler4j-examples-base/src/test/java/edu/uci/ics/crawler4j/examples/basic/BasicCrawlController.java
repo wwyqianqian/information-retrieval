@@ -32,10 +32,10 @@ public class BasicCrawlController {
         config.setPolitenessDelay(1000);
 
         // You can set the maximum crawl depth here. The default value is -1 for unlimited depth.
-        config.setMaxDepthOfCrawling(-1);
+        config.setMaxDepthOfCrawling(5);
 
         // You can set the maximum number of pages to crawl. The default value is -1 for unlimited number of pages.
-        config.setMaxPagesToFetch(1000);
+        config.setMaxPagesToFetch(3000);
 
         // Should binary data should also be crawled? example: the contents of pdf, or the metadata of images etc
         config.setIncludeBinaryContentInCrawling(false);
@@ -69,9 +69,14 @@ public class BasicCrawlController {
         // For each crawl, you need to add some seed urls. These are the first
         // URLs that are fetched and then the crawler starts following links
         // which are found in these pages
-        controller.addSeed("https://www.ics.uci.edu/");
-//        controller.addSeed("https://www.ics.uci.edu/~lopes/");
-//        controller.addSeed("https://www.ics.uci.edu/~welling/");
+        controller.addSeed("http://news.163.com/");
+        controller.addSeed("http://news.163.com/air/");
+        controller.addSeed("http://news.163.com/rank/");
+        controller.addSeed("http://news.163.com/domestic/");
+        controller.addSeed("http://news.163.com/world/");
+
+
+
 
         // Number of threads to use during crawling. Increasing this typically makes crawling faster. But crawling
         // speed depends on many other factors as well. You can experiment with this to figure out what number of

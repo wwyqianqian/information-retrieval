@@ -42,7 +42,7 @@ public class BasicCrawler extends WebCrawler {
         }
 
         // Only accept the url if it is in the "www.ics.uci.edu" domain and protocol is "http".
-        return href.startsWith("https://www.ics.uci.edu/");
+        return href.startsWith("http://news.163.com/");
     }
 
     @Override
@@ -77,9 +77,9 @@ public class BasicCrawler extends WebCrawler {
             // ==============================
 
 
-            System.out.println("纯文本长度: " + text.length());
-            System.out.println("html长度: " + html.length());
-            System.out.println("输出链接个数: " + links.size());
+//            System.out.println("纯文本长度: " + text.length());
+//            System.out.println("html长度: " + html.length());
+//            System.out.println("输出链接个数: " + links.size());
 
 
         }
@@ -96,7 +96,7 @@ public class BasicCrawler extends WebCrawler {
 
 
         // ==============================
-        if ((myCrawlStat.getTotalProcessedPages() % 5) == 0) {
+        if ((myCrawlStat.getTotalProcessedPages() % 1) == 0) {
             dumpMyData();
         }
         // ==============================
