@@ -55,7 +55,8 @@ def get_content(url, article_count):
         bs4 = BeautifulSoup(body, 'html.parser')
         try:
             body = bs4.find('div', class_='post_text').get_text()
-            # dirty hack
+
+            # dirty hack: replace str with null
             body = body.replace("(function() {", "")
             body = body.replace("(window.slotbydup=window.slotbydup || []).push({", "")
             body = body.replace("id: '6374560',", "")
@@ -82,6 +83,10 @@ def get_content(url, article_count):
             with open(file_name, 'a', encoding='utf-8') as article_f:
                 article_f.write(body)
 
+            # dirty hack: creat bash file , but it works:), like "python3 -m jieba 1.txt > result1.txt"
+            with open('/Users/qianqian/Desktop/cut.sh', 'a', encoding='utf-8') as bash_file:
+                bash_file.write("python3 -m jieba " + str(article_count) + ".txt > result" + str(article_count) + ".txt\n")
+
         except AttributeError as e:
             print(e)
         else:
@@ -104,4 +109,4 @@ if __name__ == "__main__":
                 print("Now we are crawling  " + "page " + str(i+1) + " and this is the " + str(j+1) + " article of this page") #debug
                 get_content(my_url, article_count)
 
-    print("Total" + str(article_count) + "downloaded.")
+    print("Total" + str(article_count) + "found.")
