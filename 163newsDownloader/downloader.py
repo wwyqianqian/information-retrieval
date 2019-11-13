@@ -54,34 +54,23 @@ def get_content(url, article_count):
         body = resp.text
         bs4 = BeautifulSoup(body, 'html.parser')
         try:
-            body = bs4.find('div', class_='post_text').get_text()
 
-            # dirty hack: replace str with null
-            body = body.replace("(function() {", "")
-            body = body.replace("(window.slotbydup=window.slotbydup || []).push({", "")
-            body = body.replace("id: '6374560',", "")
-            body = body.replace("container: 'ssp_6374560',", "")
-            body = body.replace("size: '300,250',", "")
-            body = body.replace("display: 'inlay-fix',", "")
-            body = body.replace("async:true", "")
-            body = body.replace("});", "")
-            body = body.replace("})();", "")
+            body = bs4.find('div', class_='post_text')
 
-            body = body.replace("#endText .video-info a{text-decoration:none;color: #000;}", "")
-            body = body.replace("#endText .video-info a:hover{color:#d34747;}", "")
-            body = body.replace("#endText .video-list li{overflow:hidden;float: left; list-style:none; width: 132px;height: 118px; position: relative;margin:8px 3px 0px 0px;}", "")
-            body = body.replace("#entText .video-list a,#endText .video-list a:visited{text-decoration:none;color:#fff;}", "")
-            body = body.replace("#endText .video-list .overlay{text-align: left; padding: 0px 6px; background-color: #313131; font-size: 12px; width: 120px; position: absolute; bottom: 0px; left: 0px; height: 26px; line-height: 26px; overflow: hidden;color: #fff; }", "")
-            body = body.replace("#endText .video-list .on{border-bottom: 8px solid #c4282b;}", "")
-            body = body.replace("#endText .video-list .play{width: 20px; height: 20px; background:url(http://static.ws.126.net/video/img14/zhuzhan/play.png);position: absolute;right: 12px; top: 62px;opacity: 0.7; color:#fff;filter:alpha(opacity=70); _background: none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\"http://static.ws.126.net/video/img14/zhuzhan/play.png\"); }", "")
-            body = body.replace("#endText .video-list a:hover .play{opacity: 1;filter:alpha(opacity=100);_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\"http://static.ws.126.net/video/img14/zhuzhan/play.png\");}", "")
+            # Remove style and video
+            for e in body.find_all('style'):
+                e.decompose()
+            for e in body.find_all('div', class_='video-wrapper'):
+                e.decompose()
 
-            fuck_str = "window.NTES && function(d){var f=function(c){var b=c.getAttribute(\"flashvars\"),a=c.getAttribute(\"repovideourl\").replace(\".flv\",\"-mobile.mp4\");h=d(c.parentNode.parentNode.parentNode),g='<embed src=\"http://v.163.com/swf/video/NetEaseFlvPlayerV3.swf\" flashvars=\"'+b+'\" allowfullscreen=\"true\" allowscriptaccess=\"always\" quality=\"high\" wmode=\"opaque\" width=\"100%\" height=\"100%\" type=\"application/x-shockwave-flash\" />';if(1/*(iPhone|iPad|iPod|Android|NETEASEBOBO|blackberry|bb\\d+)/ig.test(navigator.userAgent)*/){g='<video controls=\"controls\" preload=\"auto\" width=\"100%\" height=\"100%\"><source type=\"video/mp4\" src=\"'+a+'\">您的浏览器暂时无法播放此视频.</video>';NTES(\".video-inner .video\").attr(\"style\", \"background: #000;\");}h.$(\".video\")[0].innerHTML=g;},e=function(b){var a=d(b.parentNode.parentNode.parentNode);a.$(\"li\").removeCss(\"on\"),b.addCss(\"on\"),a.$(\".video-title\")[0].innerHTML=\"string\"==typeof b.textContent?b.textContent:b.innerText,a.$(\".video-title\")[0].setAttribute(\"href\",b.getAttribute(\"url\")),a.$(\".video-from\")[0].innerHTML=\"（来源：\"+b.getAttribute(\"source\")+\"）\",f(b);};window.continuePlay=function(){var a,b=d(d(\".video-list .on\")[0].nextSibling);3==b.nodeType&&(b=d(b.nextSibling));if(b&&d(\".video-inner input\")[0].checked){e(b);}},function(){var a={init:function(){if(d(\".video-list li\")[0]){d(d(\".video-list li\")[0]).addCss(\"on\"),this.eventBind();}},eventBind:function(){d(\".video-list li\").addEvent(\"click\",function(b){e(d(this)),b.preventDefault();}};a.init();}();}(NTES);"
-            body = body.replace(fuck_str, "")
+            # Remove AD and ep-source
+            body.find('div', class_='gg200x300').decompose()
+            body.find('div', class_='ep-source').decompose()
+
 
             file_name = '/Users/qianqian/Desktop/data/' + str(article_count) + '.txt'
             with open(file_name, 'a', encoding='utf-8') as article_f:
-                article_f.write(body)
+                article_f.write(str(body.get_text()))
 
             # dirty hack: creat bash file , but it works:), like "python3 -m jieba 1.txt > result1.txt"
             with open('/Users/qianqian/Desktop/cut.sh', 'a', encoding='utf-8') as bash_file:
