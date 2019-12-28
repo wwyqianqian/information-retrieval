@@ -3,6 +3,7 @@ import string
 import os
 import re
 import json
+from collections import OrderedDict
 
 def word2list(mydir, mylist):  # Read the txt file, and put every word into my list.
     try:
@@ -84,10 +85,12 @@ def getOverlapRatio(root_title_dir, root_artic_dir, list1, list2):
                     dict[num2[0]] = str(OverlapRatio)  # append
                     print(len(dict))  # 目前字典大小
 
+
                     list2 = []
             list1 = []
 
-            jsonStr = json.dumps(dict)
+            d_sorted_by_value = OrderedDict(sorted(dict.items(), key=lambda x: x[1]))
+            jsonStr = json.dumps(d_sorted_by_value)
 
             try :
                 new_doc = "/Users/qianqian/Desktop/Data" + str(temp_title_dir_list[i])
@@ -98,7 +101,7 @@ def getOverlapRatio(root_title_dir, root_artic_dir, list1, list2):
                 pass
 
             dict = {}  # clear
-
+            d_sorted_by_value = {}
 
     except (IOError, TypeError):
         pass
