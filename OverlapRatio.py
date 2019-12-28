@@ -2,7 +2,7 @@ import sys
 import string
 import os
 import re
-
+import json
 
 def word2list(mydir, mylist):  # Read the txt file, and put every word into my list.
     try:
@@ -58,9 +58,9 @@ def getOverlapRatio(root_title_dir, root_artic_dir, list1, list2):
         #         print(title_dir)
 
         for i in range(100):
-            print(temp_title_dir_list[i])
             list1 = word2list(temp_title_dir_list[i], list1)
-            print(list1)
+
+            dict = {}
 
             for root, dirs, files in os.walk(root_artic_dir):
                 for j in files:
@@ -79,11 +79,26 @@ def getOverlapRatio(root_title_dir, root_artic_dir, list1, list2):
 
                     # t 与 p 的重合度 = [count(t) + count(p)] / [length(t) + length(p)]
                     OverlapRatio = float(count_t+count_p) / (len(list1)+len(list2))
-                    print("标题" + temp_title_dir_list[i] + "对应文章" + num2[0] + "的重合度为：" + str(OverlapRatio))
+                    # print("标题" + temp_title_dir_list[i] + "对应文章" + num2[0] + "的重合度为：" + str(OverlapRatio))
 
+                    dict[num2[0]] = str(OverlapRatio)  # append
+                    print(len(dict))  # 目前字典大小
 
                     list2 = []
             list1 = []
+
+            jsonStr = json.dumps(dict)
+
+            try :
+                new_doc = "/Users/qianqian/Desktop/Data" + str(temp_title_dir_list[i])
+
+                f = open(new_doc, "a")
+                f.write(jsonStr)
+            except (IOError, TypeError):
+                pass
+
+            dict = {}  # clear
+
 
     except (IOError, TypeError):
         pass
@@ -97,32 +112,3 @@ if __name__ == "__main__":
 
     getOverlapRatio(root_title_dir, root_artic_dir, list1, list2)
 
-
-#OUTPUT:
-# count_t: 1
-# count_p: 1
-# 标题/Users/qianqian/Desktop/articles/title/title_15195.txt对应文章18645的重合度为：0.0038022813688212928
-# count_t: 0
-# count_p: 0
-# 标题/Users/qianqian/Desktop/articles/title/title_15195.txt对应文章17576的重合度为：0.0
-# count_t: 0
-# count_p: 0
-# 标题/Users/qianqian/Desktop/articles/title/title_15195.txt对应文章16668的重合度为：0.0
-# count_t: 0
-# count_p: 0
-# 标题/Users/qianqian/Desktop/articles/title/title_15195.txt对应文章1587的重合度为：0.0
-# count_t: 0
-# count_p: 0
-# 标题/Users/qianqian/Desktop/articles/title/title_15195.txt对应文章948的重合度为：0.0
-# count_t: 0
-# count_p: 0
-# 标题/Users/qianqian/Desktop/articles/title/title_15195.txt对应文章18123的重合度为：0.0
-# count_t: 0
-# count_p: 0
-# 标题/Users/qianqian/Desktop/articles/title/title_15195.txt对应文章790的重合度为：0.0
-# count_t: 0
-# count_p: 0
-# 标题/Users/qianqian/Desktop/articles/title/title_15195.txt对应文章13076的重合度为：0.0
-# count_t: 1
-# count_p: 2
-# 标题/Users/qianqian/Desktop/articles/title/title_15195.txt对应文章24的重合度为：0.003592814371257485
